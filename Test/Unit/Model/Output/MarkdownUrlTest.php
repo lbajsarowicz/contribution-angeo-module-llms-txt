@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Angeo\LlmsTxt\Test\Unit\Model\Output;
 
 use Angeo\LlmsTxt\Model\Output\MarkdownUrl;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,6 +27,7 @@ class MarkdownUrlTest extends TestCase
     /**
      * @dataProvider urls
      */
+    #[DataProvider('urls')]
     public function testForUrl(?string $input, ?string $expected): void
     {
         self::assertSame($expected, $this->subject->forUrl($input));
