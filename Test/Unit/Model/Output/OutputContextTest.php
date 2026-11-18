@@ -26,7 +26,7 @@ class OutputContextTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->store = $this->createMock(Store::class);
+        $this->store = $this->createStub(Store::class);
         $this->store->method('getId')->willReturn(1);
         $this->store->method('isFrontUrlSecure')->willReturn(true);
         $this->store->method('getBaseUrl')->willReturnCallback(
@@ -37,7 +37,7 @@ class OutputContextTest extends TestCase
         );
         $this->store->method('getCurrentCurrencyCode')->willReturn('USD');
 
-        $this->scopeConfig = $this->createMock(ScopeConfigInterface::class);
+        $this->scopeConfig = $this->createStub(ScopeConfigInterface::class);
     }
 
     public function testGettersReturnConstructedValues(): void
@@ -58,7 +58,8 @@ class OutputContextTest extends TestCase
 
     public function testLocaleNormalizedToBcp47(): void
     {
-        $this->scopeConfig->method('getValue')
+        $this->scopeConfig = $this->createMock(ScopeConfigInterface::class);
+        $this->scopeConfig->expects(self::once())->method('getValue')
             ->with('general/locale/code', ScopeInterface::SCOPE_STORE, 1)
             ->willReturn('en_US');
 

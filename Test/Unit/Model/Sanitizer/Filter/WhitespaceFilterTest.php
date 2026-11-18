@@ -26,7 +26,7 @@ class WhitespaceFilterTest extends TestCase
 
     public function testCompactCollapsesToSingleLine(): void
     {
-        $context = $this->createMock(OutputContextInterface::class);
+        $context = $this->createStub(OutputContextInterface::class);
         $context->method('getVerbosity')->willReturn(OutputContextInterface::VERBOSITY_COMPACT);
 
         $input = "line one\n\nline two\nline three";
@@ -35,7 +35,7 @@ class WhitespaceFilterTest extends TestCase
 
     public function testFullPreservesParagraphs(): void
     {
-        $context = $this->createMock(OutputContextInterface::class);
+        $context = $this->createStub(OutputContextInterface::class);
         $context->method('getVerbosity')->willReturn(OutputContextInterface::VERBOSITY_FULL);
 
         $input = "line one\n\nline two\n\n\n\nline three";
@@ -46,7 +46,7 @@ class WhitespaceFilterTest extends TestCase
 
     public function testEmptyReturnsEmpty(): void
     {
-        $context = $this->createMock(OutputContextInterface::class);
+        $context = $this->createStub(OutputContextInterface::class);
         self::assertSame('', $this->filter->filter('', $context));
     }
 }

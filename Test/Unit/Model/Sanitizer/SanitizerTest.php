@@ -12,7 +12,6 @@ use Angeo\LlmsTxt\Api\OutputContextInterface;
 use Angeo\LlmsTxt\Api\SanitizerFilterInterface;
 use Angeo\LlmsTxt\Model\Sanitizer\Sanitizer;
 use Magento\Store\Model\Store;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -21,13 +20,13 @@ use Psr\Log\LoggerInterface;
  */
 class SanitizerTest extends TestCase
 {
-    private LoggerInterface&MockObject $logger;
-    private OutputContextInterface&MockObject $context;
+    private LoggerInterface $logger;
+    private OutputContextInterface $context;
 
     protected function setUp(): void
     {
-        $this->logger  = $this->createMock(LoggerInterface::class);
-        $this->context = $this->createMock(OutputContextInterface::class);
+        $this->logger  = $this->createStub(LoggerInterface::class);
+        $this->context = $this->createStub(OutputContextInterface::class);
     }
 
     public function testEmptyInputReturnsEmpty(): void
@@ -38,9 +37,9 @@ class SanitizerTest extends TestCase
 
     public function testFiltersAppliedInOrder(): void
     {
-        $f1 = $this->createMock(SanitizerFilterInterface::class);
+        $f1 = $this->createStub(SanitizerFilterInterface::class);
         $f1->method('filter')->willReturnCallback(fn(string $c) => $c . 'A');
-        $f2 = $this->createMock(SanitizerFilterInterface::class);
+        $f2 = $this->createStub(SanitizerFilterInterface::class);
         $f2->method('filter')->willReturnCallback(fn(string $c) => $c . 'B');
 
         $sanitizer = new Sanitizer($this->logger, [$f1, $f2]);
@@ -49,15 +48,16 @@ class SanitizerTest extends TestCase
 
     public function testFailingFilterIsLoggedAndPipelineContinues(): void
     {
-        $f1 = $this->createMock(SanitizerFilterInterface::class);
+        $f1 = $this->createStub(SanitizerFilterInterface::class);
         $f1->method('filter')->willThrowException(new \RuntimeException('boom'));
-        $f2 = $this->createMock(SanitizerFilterInterface::class);
+        $f2 = $this->createStub(SanitizerFilterInterface::class);
         $f2->method('filter')->willReturnCallback(fn(string $c) => strtoupper($c));
 
-        $store = $this->createMock(Store::class);
+        $store = $this->createStub(Store::class);
         $store->method('getCode')->willReturn('default');
         $this->context->method('getStore')->willReturn($store);
 
+        $this->logger = $this->createMock(LoggerInterface::class);
         $this->logger->expects(self::once())->method('warning');
 
         $sanitizer = new Sanitizer($this->logger, [$f1, $f2]);

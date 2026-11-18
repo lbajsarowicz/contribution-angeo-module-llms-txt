@@ -23,7 +23,7 @@ class HtmlFilterTest extends TestCase
     protected function setUp(): void
     {
         $this->filter  = new HtmlFilter();
-        $this->context = $this->createMock(OutputContextInterface::class);
+        $this->context = $this->createStub(OutputContextInterface::class);
     }
 
     public function testStripsTagsAndDecodesEntities(): void

@@ -58,7 +58,7 @@ class UrlResolverTest extends TestCase
 
     public function testBatchWarmupAndLookups(): void
     {
-        $select = $this->createMock(Select::class);
+        $select = $this->createStub(Select::class);
         $select->method('from')->willReturnSelf();
         $select->method('where')->willReturnSelf();
 
@@ -69,15 +69,15 @@ class UrlResolverTest extends TestCase
             ['entity_id' => 300, 'entity_type' => 'cms-page', 'request_path' => 'about'],
         ]);
 
-        $adapter = $this->createMock(AdapterInterface::class);
+        $adapter = $this->createStub(AdapterInterface::class);
         $adapter->method('select')->willReturn($select);
         $adapter->method('query')->willReturn($statement);
 
-        $resource = $this->createMock(ResourceConnection::class);
+        $resource = $this->createStub(ResourceConnection::class);
         $resource->method('getConnection')->willReturn($adapter);
         $resource->method('getTableName')->willReturn('url_rewrite');
 
-        $store = $this->createMock(Store::class);
+        $store = $this->createStub(Store::class);
         $store->method('isFrontUrlSecure')->willReturn(true);
         $store->method('getBaseUrl')->willReturnCallback(
             static fn (string $type = UrlInterface::URL_TYPE_LINK, ?bool $secure = null): string =>
@@ -85,7 +85,7 @@ class UrlResolverTest extends TestCase
                     ? 'https://shop.test/en/'
                     : 'http://shop.test/'
         );
-        $repo = $this->createMock(StoreRepositoryInterface::class);
+        $repo = $this->createStub(StoreRepositoryInterface::class);
         $repo->method('getById')->willReturn($store);
 
         $resolver = new UrlResolver($resource, $repo);
@@ -111,7 +111,7 @@ class UrlResolverTest extends TestCase
 
     public function testFirstRewriteWinsOnDuplicates(): void
     {
-        $select = $this->createMock(Select::class);
+        $select = $this->createStub(Select::class);
         $select->method('from')->willReturnSelf();
         $select->method('where')->willReturnSelf();
 
@@ -120,15 +120,15 @@ class UrlResolverTest extends TestCase
             ['entity_id' => 100, 'entity_type' => 'product', 'request_path' => 'second.html'],
         ]);
 
-        $adapter = $this->createMock(AdapterInterface::class);
+        $adapter = $this->createStub(AdapterInterface::class);
         $adapter->method('select')->willReturn($select);
         $adapter->method('query')->willReturn($statement);
 
-        $resource = $this->createMock(ResourceConnection::class);
+        $resource = $this->createStub(ResourceConnection::class);
         $resource->method('getConnection')->willReturn($adapter);
         $resource->method('getTableName')->willReturn('url_rewrite');
 
-        $store = $this->createMock(Store::class);
+        $store = $this->createStub(Store::class);
         $store->method('isFrontUrlSecure')->willReturn(true);
         $store->method('getBaseUrl')->willReturnCallback(
             static fn (string $type = UrlInterface::URL_TYPE_LINK, ?bool $secure = null): string =>
@@ -136,7 +136,7 @@ class UrlResolverTest extends TestCase
                     ? 'https://shop.test/'
                     : 'http://shop.test/'
         );
-        $repo = $this->createMock(StoreRepositoryInterface::class);
+        $repo = $this->createStub(StoreRepositoryInterface::class);
         $repo->method('getById')->willReturn($store);
 
         $resolver = new UrlResolver($resource, $repo);
@@ -149,7 +149,7 @@ class UrlResolverTest extends TestCase
 
     public function testWarmUpIsIdempotent(): void
     {
-        $select = $this->createMock(Select::class);
+        $select = $this->createStub(Select::class);
         $select->method('from')->willReturnSelf();
         $select->method('where')->willReturnSelf();
 
@@ -159,11 +159,11 @@ class UrlResolverTest extends TestCase
             ->method('query')
             ->willReturn($this->statementStub([]));
 
-        $resource = $this->createMock(ResourceConnection::class);
+        $resource = $this->createStub(ResourceConnection::class);
         $resource->method('getConnection')->willReturn($adapter);
         $resource->method('getTableName')->willReturn('url_rewrite');
 
-        $store = $this->createMock(Store::class);
+        $store = $this->createStub(Store::class);
         $store->method('isFrontUrlSecure')->willReturn(true);
         $store->method('getBaseUrl')->willReturnCallback(
             static fn (string $type = UrlInterface::URL_TYPE_LINK, ?bool $secure = null): string =>
@@ -171,7 +171,7 @@ class UrlResolverTest extends TestCase
                     ? 'https://shop.test/'
                     : 'http://shop.test/'
         );
-        $repo = $this->createMock(StoreRepositoryInterface::class);
+        $repo = $this->createStub(StoreRepositoryInterface::class);
         $repo->method('getById')->willReturn($store);
 
         $resolver = new UrlResolver($resource, $repo);
