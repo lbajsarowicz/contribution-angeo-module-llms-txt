@@ -17,6 +17,7 @@ use PHPUnit\Framework\TestCase;
  */
 class MarkdownUrlTest extends TestCase
 {
+    /** @var MarkdownUrl */
     private MarkdownUrl $subject;
 
     protected function setUp(): void

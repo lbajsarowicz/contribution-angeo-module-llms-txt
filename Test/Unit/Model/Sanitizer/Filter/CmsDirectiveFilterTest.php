@@ -13,7 +13,6 @@ use Angeo\LlmsTxt\Model\Config;
 use Angeo\LlmsTxt\Model\Sanitizer\Filter\CmsDirectiveFilter;
 use Magento\Cms\Model\Template\FilterProvider;
 use Magento\Store\Api\Data\StoreInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -22,20 +21,20 @@ use Psr\Log\LoggerInterface;
  */
 class CmsDirectiveFilterTest extends TestCase
 {
-    private FilterProvider&MockObject $filterProvider;
-    private Config&MockObject $config;
-    private LoggerInterface&MockObject $logger;
-    private OutputContextInterface&MockObject $context;
-    private StoreInterface&MockObject $store;
+    private FilterProvider $filterProvider;
+    private Config $config;
+    private LoggerInterface $logger;
+    private OutputContextInterface $context;
+    private StoreInterface $store;
     private CmsDirectiveFilter $filter;
 
     protected function setUp(): void
     {
         $this->filterProvider = $this->createMock(FilterProvider::class);
-        $this->config         = $this->createMock(Config::class);
-        $this->logger         = $this->createMock(LoggerInterface::class);
-        $this->context        = $this->createMock(OutputContextInterface::class);
-        $this->store          = $this->createMock(StoreInterface::class);
+        $this->config         = $this->createStub(Config::class);
+        $this->logger         = $this->createStub(LoggerInterface::class);
+        $this->context        = $this->createStub(OutputContextInterface::class);
+        $this->store          = $this->createStub(StoreInterface::class);
 
         $this->store->method('getId')->willReturn(1);
         $this->store->method('getCode')->willReturn('default');
@@ -66,7 +65,9 @@ class CmsDirectiveFilterTest extends TestCase
     {
         $this->config->method('shouldResolveDirectives')->willReturn(true);
         $this->config->method('shouldResolveProductDirectives')->willReturn(false);
-        $this->context->method('getShared')
+        $this->context = $this->createMock(OutputContextInterface::class);
+        $this->context->method('getStore')->willReturn($this->store);
+        $this->context->expects(self::once())->method('getShared')
             ->with(OutputContextInterface::SHARED_ENTITY_TYPE)
             ->willReturn('product');
 
